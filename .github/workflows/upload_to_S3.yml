@@ -1,0 +1,47 @@
+name: Upload to S3
+
+on:
+  workflow_call:
+    inputs:
+      result: 
+        required: true
+        type: string
+
+# on:
+#   workflow_dispatch:
+
+env:
+  AWS_ACCESS_KEY_ID: ${{secrets.AWS_GITHUB_ACTION_RESULTS_KEY_ID}}
+  AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_GITHUB_ACTION_RESULTS_SECRET_KEY}}
+  AWS_S3_BUCKET: ${{secrets.AWS_GITHUB_ACTION_RESULTS_BUCKET}}
+  AWS_DEFAULT_REGION: ${{secrets.AWS_GITHUB_ACTION_RESULTS_REGION}}
+  AWS_CLI_VERSION: 1.27.165
+
+jobs:
+  upload_to_S3:
+    name: upload artifact to S3
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install awscli==$AWS_CLI_VERSION 
+
+      - name: download result
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{inputs.result}}
+
+      - name: upload to S3
+        run: |
+          aws --version
+          echo $AWS_ACCESS_KEY_ID
+          aws s3 cp ${{inputs.result}}.json s3://${AWS_S3_BUCKET}/${{inputs.result}}.json
+
+        

@@ -1,0 +1,47 @@
+name: Pylint workflow
+
+on:
+  workflow_call:
+    inputs:
+      in:
+        required: true
+        type: string
+      out:
+        required: true
+        type: string
+      name:
+        required: true
+        type: string
+
+jobs:
+  build_and_lint:
+    name: build_and_test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+
+      - name: Linting
+        continue-on-error: true
+        run: |
+          cd ${{ github.workspace }}
+          pylint --output-format=json ${{inputs.in }} > ${{inputs.out}}/${{inputs.name}}.json
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{inputs.name}}
+          path: ${{ github.workspace }}/${{inputs.out}}/${{inputs.name}}.json
