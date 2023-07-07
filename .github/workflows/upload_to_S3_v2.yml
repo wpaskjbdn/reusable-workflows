@@ -50,5 +50,5 @@ jobs:
       run: |
         aws s3api put-object \
           --bucket ${{ env.s3_bucket }} \
-          --key ${{inputs.result}} \
-          --body ${{inputs.result}}
+          --key ${{inputs.result}}.json \
+          --body ${{inputs.result}}.json
