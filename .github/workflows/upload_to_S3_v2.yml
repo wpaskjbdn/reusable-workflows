@@ -2,16 +2,14 @@
 
 name: Copy Values to S3
 
-# on:
-#   workflow_call:
-#     inputs:
-#       artifact_name:
-#         type: string
-#         description: github action result to be uploaded
-#         required: true
-
 on:
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      result:
+        type: string
+        description: github action result to be uploaded
+        required: true
+
 
 jobs:
   copy-values-file:
@@ -41,11 +39,14 @@ jobs:
         role-to-assume: arn:aws:iam::${{ env.aws_account }}:role/github_actions
         aws-region: us-east-2
         
+    - name: download result
+      uses: actions/download-artifact@v2
+      with:
+        name: ${{inputs.result}}
 
     - name: Push to s3
       run: |
-        echo "this is test" > test.txt
         aws s3api put-object \
           --bucket ${{ env.s3_bucket }} \
-          --key test.txt \
-          --body test.txt
+          --key ${{inputs.result}} \
+          --body ${{inputs.result}}
