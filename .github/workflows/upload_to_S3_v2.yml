@@ -31,6 +31,8 @@ jobs:
       run: |
         echo "aws_account=${{ vars.CI_RESULT_AWS_ACCOUNT }}" >> "$GITHUB_ENV"
         echo "s3_bucket=${{ vars.CI_RESULT_PROD_BUCKET }}" >> "$GITHUB_ENV"
+        echo ${{ vars.CI_RESULT_AWS_ACCOUNT }}
+        echo ${{ vars.CI_RESULT_PROD_BUCKET }}
       if: github.ref == 'refs/heads/main'
 
     - name: Configure AWS Credentials
