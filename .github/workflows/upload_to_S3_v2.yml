@@ -1,0 +1,51 @@
+# (c) Copyright 2023 Hewlett Packard Enterprise Development LP
+
+name: Copy Values to S3
+
+# on:
+#   workflow_call:
+#     inputs:
+#       artifact_name:
+#         type: string
+#         description: github action result to be uploaded
+#         required: true
+
+on:
+  workflow_dispatch:
+
+jobs:
+  copy-values-file:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      actions: read
+      contents: read
+      packages: read
+    steps:
+
+    # - name: Setup env vars for Dev
+    #   run: |
+    #     echo "aws_account=${{ vars.DEV_S3_HELM_ACCOUNT }}" >> "$GITHUB_ENV"
+    #     echo "s3_bucket=${{ vars.DEV_S3_HELM_BUCKET }}" >> "$GITHUB_ENV"
+    #   if: github.ref != 'refs/heads/main'
+
+    # - name: Setup env vars for Prod
+    #   run: |
+    #     echo "aws_account=${{ vars.PROD_S3_HELM_ACCOUNT }}" >> "$GITHUB_ENV"
+    #     echo "s3_bucket=${{ vars.PROD_S3_HELM_BUCKET }}" >> "$GITHUB_ENV"
+    #   if: github.ref == 'refs/heads/main'
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::095826210183:role/github_actions
+        aws-region: us-east-2
+        
+
+    - name: Push to s3
+      run: |
+        echo "this is test" > test.txt
+        aws s3api put-object \
+          --bucket github-action-results \
+          --key test.txt \
+          --body test.txt
