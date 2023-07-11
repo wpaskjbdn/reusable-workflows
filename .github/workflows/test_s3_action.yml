@@ -1,0 +1,19 @@
+name: Upload to S3
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  copy-values-file:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: create test file
+      run: |
+       echo "this is test file" > test.txt
+    
+    - name: upload test to S3
+      uses: wpaskjbdn/reusable-workflows/.github/workflows/pylint.yml@main
+      with:
+        upload_file: test.txt

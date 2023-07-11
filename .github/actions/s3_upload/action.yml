@@ -1,25 +1,17 @@
-# (c) Copyright 2023 Hewlett Packard Enterprise Development LP
+name: s3 upload
+description: upload github action result to AWS S3 storage
 
-name: Copy Values to S3
+permissions:
+  id-token: write
 
-on:
-  workflow_call:
-    inputs:
-      result:
-        type: string
-        description: github action result to be uploaded
-        required: true
+inputs:
+  upload_file"
+    description: json result file to be uploaded to S3
+    required: true
 
-jobs:
-  copy-values-file:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      actions: read
-      contents: read
-      packages: read
-    steps:
-
+runs:
+  using: "composite"
+  steps:
     - name: Setup env vars for Dev
       run: |
         # Devops team needs to provision aws account and s3 bucket for this workflow
@@ -27,7 +19,7 @@ jobs:
         # echo "s3_bucket=${{ vars.CI_RESULT_DEV_BUCKET }}" >> "$GITHUB_ENV"
 
         echo "aws_account=095826210183" >> "$GITHUB_ENV"
-        echo "s3_bucket=github-action-results-prod" >> "$GITHUB_ENV"
+        echo "s3_bucket=github-action-results" >> "$GITHUB_ENV"
       if: github.ref != 'refs/heads/main'
 
     - name: Setup env vars for Prod
@@ -44,15 +36,10 @@ jobs:
       with:
         role-to-assume: arn:aws:iam::${{ env.aws_account }}:role/github_actions
         aws-region: us-east-2
-        
-    - name: download result
-      uses: actions/download-artifact@v2
-      with:
-        name: ${{inputs.result}}
 
     - name: Push to s3
       run: |
         aws s3api put-object \
           --bucket ${{ env.s3_bucket }} \
-          --key ${{inputs.result}}.json \
-          --body ${{inputs.result}}.json
+          --key ${{inputs.upload_file}} \
+          --body ${{inputs.upload_file}}
