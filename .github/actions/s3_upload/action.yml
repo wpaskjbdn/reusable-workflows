@@ -13,6 +13,7 @@ runs:
   using: "composite"
   steps:
     - name: Setup env vars for Dev
+      shell: bash
       run: |
         # Devops team needs to provision aws account and s3 bucket for this workflow
         # echo "aws_account=${{ vars.CI_RESULT_AWS_ACCOUNT }}" >> "$GITHUB_ENV"
@@ -23,6 +24,7 @@ runs:
       if: github.ref != 'refs/heads/main'
 
     - name: Setup env vars for Prod
+      shell: bash
       run: |
         # echo "aws_account=${{ vars.CI_RESULT_AWS_ACCOUNT }}" >> "$GITHUB_ENV"
         # echo "s3_bucket=${{ vars.CI_RESULT_PROD_BUCKET }}" >> "$GITHUB_ENV"
@@ -38,6 +40,7 @@ runs:
         aws-region: us-east-2
 
     - name: Push to s3
+      shell: bash
       run: |
         aws s3api put-object \
           --bucket ${{ env.s3_bucket }} \
