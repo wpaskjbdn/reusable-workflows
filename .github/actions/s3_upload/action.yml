@@ -15,10 +15,6 @@ runs:
     - name: Setup env vars for Dev
       shell: bash
       run: |
-        # Devops team needs to provision aws account and s3 bucket for this workflow
-        # echo "aws_account=${{ vars.CI_RESULT_AWS_ACCOUNT }}" >> "$GITHUB_ENV"
-        # echo "s3_bucket=${{ vars.CI_RESULT_DEV_BUCKET }}" >> "$GITHUB_ENV"
-
         echo "aws_account=095826210183" >> "$GITHUB_ENV"
         echo "s3_bucket=github-action-results" >> "$GITHUB_ENV"
       if: github.ref != 'refs/heads/main'
@@ -26,9 +22,6 @@ runs:
     - name: Setup env vars for Prod
       shell: bash
       run: |
-        # echo "aws_account=${{ vars.CI_RESULT_AWS_ACCOUNT }}" >> "$GITHUB_ENV"
-        # echo "s3_bucket=${{ vars.CI_RESULT_PROD_BUCKET }}" >> "$GITHUB_ENV"
-        
         echo "aws_account=095826210183" >> "$GITHUB_ENV"
         echo "s3_bucket=github-action-results-prod" >> "$GITHUB_ENV"
       if: github.ref == 'refs/heads/main'
