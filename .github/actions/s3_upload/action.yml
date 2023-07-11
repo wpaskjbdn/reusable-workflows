@@ -12,8 +12,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup env vars for Dev
-      shell: bash
+    # - name: Setup env vars for Dev
+    #   shell: bash
     #   run: |
     #     echo "aws_account=095826210183" >> "$GITHUB_ENV"
     #     echo "s3_bucket=github-action-results" >> "$GITHUB_ENV"
