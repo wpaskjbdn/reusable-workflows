@@ -1,4 +1,4 @@
-name: Upload to S3
+name: Test S3 Action
 
 on:
   workflow_dispatch:
