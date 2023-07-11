@@ -14,6 +14,6 @@ jobs:
        echo "this is test file" > test.txt
     
     - name: upload test to S3
-      uses: wpaskjbdn/reusable-workflows/.github/workflows/pylint.yml@main
+      uses: wpaskjbdn/reusable-workflows/.github/actions/s3_upload@main
       with:
         upload_file: test.txt
