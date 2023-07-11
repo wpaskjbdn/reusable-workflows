@@ -14,28 +14,28 @@ runs:
   steps:
     - name: Setup env vars for Dev
       shell: bash
-      run: |
-        echo "aws_account=095826210183" >> "$GITHUB_ENV"
-        echo "s3_bucket=github-action-results" >> "$GITHUB_ENV"
-      if: github.ref != 'refs/heads/main'
+    #   run: |
+    #     echo "aws_account=095826210183" >> "$GITHUB_ENV"
+    #     echo "s3_bucket=github-action-results" >> "$GITHUB_ENV"
+    #   if: github.ref != 'refs/heads/main'
 
-    - name: Setup env vars for Prod
-      shell: bash
-      run: |
-        echo "aws_account=095826210183" >> "$GITHUB_ENV"
-        echo "s3_bucket=github-action-results-prod" >> "$GITHUB_ENV"
-      if: github.ref == 'refs/heads/main'
+    # - name: Setup env vars for Prod
+    #   shell: bash
+    #   run: |
+    #     echo "aws_account=095826210183" >> "$GITHUB_ENV"
+    #     echo "s3_bucket=github-action-results-prod" >> "$GITHUB_ENV"
+    #   if: github.ref == 'refs/heads/main'
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
-        role-to-assume: arn:aws:iam::${{ env.aws_account }}:role/github_actions
+        role-to-assume: arn:aws:iam::095826210183:role/github_actions
         aws-region: us-east-2
 
     - name: Push to s3
       shell: bash
       run: |
         aws s3api put-object \
-          --bucket ${{ env.s3_bucket }} \
+          --bucket github-action-results \
           --key ${{inputs.upload_file}} \
           --body ${{inputs.upload_file}}
