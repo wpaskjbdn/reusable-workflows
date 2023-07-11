@@ -5,7 +5,7 @@ permissions:
   id-token: write
 
 inputs:
-  upload_file"
+  upload_file:
     description: json result file to be uploaded to S3
     required: true
 
