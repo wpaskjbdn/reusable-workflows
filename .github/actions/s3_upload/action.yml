@@ -12,30 +12,27 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # - name: Setup env vars for Dev
-    #   shell: bash
-    #   run: |
-    #     echo "aws_account=095826210183" >> "$GITHUB_ENV"
-    #     echo "s3_bucket=github-action-results" >> "$GITHUB_ENV"
-    #   if: github.ref != 'refs/heads/main'
+    - name: Setup env vars for Dev
+      shell: bash
+      run: |
+        echo "OBJ_PREFIX=${{ secrets.SCINFO_DEV_OBJ_PREFIX }}" >> "$GITHUB_ENV"
+      if: github.ref != 'refs/heads/main'
 
-    # - name: Setup env vars for Prod
-    #   shell: bash
-    #   run: |
-    #     echo "aws_account=095826210183" >> "$GITHUB_ENV"
-    #     echo "s3_bucket=github-action-results-prod" >> "$GITHUB_ENV"
-    #   if: github.ref == 'refs/heads/main'
-
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        role-to-assume: arn:aws:iam::095826210183:role/github_actions
-        aws-region: us-east-2
+    - name: Setup env vars for Prod
+      shell: bash
+      run: |
+        echo "OBJ_PREFIX=${{ secrets.SCINFO_PROD_OBJ_PREFIX }}" >> "$GITHUB_ENV"
+      if: github.ref == 'refs/heads/main'
 
     - name: Push to s3
       shell: bash
       run: |
         aws s3api put-object \
-          --bucket github-action-results \
-          --key ${{inputs.upload_file}} \
+          --bucket ${{ env.S3_BUCKET }} \
+          --key ${{ env.OBJ_PREFIX }}/$${{inputs.upload_file}} \
           --body ${{inputs.upload_file}}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.SCINFO_AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCINFO_AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ${{ secrets.SCINFO_AWS_REGION }}
+        S3_BUCKET: ${{ secrets.SCINFO_S3_BUCKET }}

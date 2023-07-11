@@ -2,9 +2,7 @@ name: Test S3 Action
 
 on:
   workflow_dispatch:
-
-permissions:
-    id-token: write
+    
 jobs:
   copy-values-file:
     runs-on: ubuntu-latest
