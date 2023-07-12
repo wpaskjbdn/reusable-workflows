@@ -42,7 +42,7 @@ runs:
       run: |
         aws s3api put-object \
           --bucket ${{ inputs.s3_bucket }} \
-          --key ${{ inputs.deployment }}}/${{ inputs.upload_file }} \
+          --key ${{ inputs.deployment }}/${{ inputs.upload_file }} \
           --body ${{ inputs.upload_file }}
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
