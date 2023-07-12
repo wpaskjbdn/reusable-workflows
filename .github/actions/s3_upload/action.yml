@@ -18,31 +18,35 @@ inputs:
     description: S3 bucket name to store the github action results
     required: true
 
-  
+  deployment:
+    description: uploads the file based to prod or dev directory in S3 
+
 
 runs:
   using: "composite"
   steps:
-    - name: Setup env vars for Dev
-      shell: bash
-      run: |
-        echo "OBJ_PREFIX=dev" >> "$GITHUB_ENV"
-      if: github.ref != 'refs/heads/main'
+    # - name: Setup env vars for Dev
+    #   shell: bash
+    #   run: |
+    #     echo "OBJ_PREFIX=dev" >> "$GITHUB_ENV"
+    #   if: github.ref != 'refs/heads/main'
 
-    - name: Setup env vars for Prod
-      shell: bash
-      run: |
-        echo "OBJ_PREFIX=prod" >> "$GITHUB_ENV"
-      if: github.ref == 'refs/heads/main'
+    # - name: Setup env vars for Prod
+    #   shell: bash
+    #   run: |
+    #     echo "OBJ_PREFIX=prod" >> "$GITHUB_ENV"
+    #   if: github.ref == 'refs/heads/main'
 
     - name: Push to s3
       shell: bash
       run: |
         aws s3api put-object \
           --bucket ${{ inputs.s3_bucket }} \
-          --key ${{ env.OBJ_PREFIX }}/${{inputs.upload_file}} \
-          --body ${{inputs.upload_file}}
+          --key ${{ inputs.deployment }}}/${{ inputs.upload_file }} \
+          --body ${{ inputs.upload_file }}
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
         AWS_REGION: us-east-2
+
+      if: ${{inputs.deployment}} == 'dev' || ${{inputs.deployment}} == 'prod'
