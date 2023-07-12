@@ -19,4 +19,4 @@ jobs:
         aws_access_key_id: ${{secrets.SCINFO_AWS_ACCESS_KEY_ID}}
         aws_secret_access_key: ${{secrets.SCINFO_AWS_SECRET_ACCESS_KEY}}
         s3_bucket: ${{secrets.SCINFO_S3_BUCKET}}
-        deployment: 'prod'
+        deployment: 'production'
