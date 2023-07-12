@@ -1,13 +1,24 @@
 name: s3 upload
 description: upload github action result to AWS S3 storage
 
-permissions:
-  id-token: write
-
 inputs:
   upload_file:
     description: json result file to be uploaded to S3
     required: true
+
+  aws_access_key_id:
+    description: AWS credential required to access S3 storage
+    required: true
+  
+  aws_secret_access_key:
+    description: AWS credential required to access S3 storage
+    required: true
+
+  s3_bucket:
+    description: S3 bucket name to store the github action results
+    required: true
+
+  
 
 runs:
   using: "composite"
@@ -15,24 +26,22 @@ runs:
     - name: Setup env vars for Dev
       shell: bash
       run: |
-        echo "OBJ_PREFIX=${{ secrets.SCINFO_DEV_OBJ_PREFIX }}" >> "$GITHUB_ENV"
+        echo "OBJ_PREFIX=dev" >> "$GITHUB_ENV"
       if: github.ref != 'refs/heads/main'
 
     - name: Setup env vars for Prod
       shell: bash
       run: |
-        echo "OBJ_PREFIX=${{ secrets.SCINFO_PROD_OBJ_PREFIX }}" >> "$GITHUB_ENV"
+        echo "OBJ_PREFIX=prod" >> "$GITHUB_ENV"
       if: github.ref == 'refs/heads/main'
 
     - name: Push to s3
       shell: bash
       run: |
         aws s3api put-object \
-          --bucket ${{ env.S3_BUCKET }} \
-          --key ${{ env.OBJ_PREFIX }}/$${{inputs.upload_file}} \
+          --bucket ${{ inputs.s3_bucket }} \
+          --key ${{ env.OBJ_PREFIX }}/${{inputs.upload_file}} \
           --body ${{inputs.upload_file}}
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.SCINFO_AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCINFO_AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ${{ secrets.SCINFO_AWS_REGION }}
-        S3_BUCKET: ${{ secrets.SCINFO_S3_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}

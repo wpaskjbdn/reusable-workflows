@@ -2,7 +2,7 @@ name: Test S3 Action
 
 on:
   workflow_dispatch:
-    
+
 jobs:
   copy-values-file:
     runs-on: ubuntu-latest
@@ -16,3 +16,6 @@ jobs:
       uses: wpaskjbdn/reusable-workflows/.github/actions/s3_upload@main
       with:
         upload_file: test.txt
+        aws_access_key_id: ${{secrets.SCINFO_AWS_ACCESS_KEY_ID}}
+        aws_secret_access_key: ${{secrets.SCINFO_AWS_SECRET_ACCESS_KEY}}
+        s3_bucket: ${{secrets.SCINFO_S3_BUCKET}}
