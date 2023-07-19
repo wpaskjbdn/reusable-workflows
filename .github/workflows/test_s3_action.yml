@@ -10,7 +10,7 @@ jobs:
 
     - name: create test file
       run: |
-       echo "this is test file" > test.txt
+       echo "this is test file" > 2023-07-19:18:07:31.947-lint.json
     
     - name: upload test to S3
       uses: wpaskjbdn/reusable-workflows/.github/actions/s3_upload@main
@@ -19,4 +19,3 @@ jobs:
         aws_access_key_id: ${{secrets.SCINFO_AWS_ACCESS_KEY_ID}}
         aws_secret_access_key: ${{secrets.SCINFO_AWS_SECRET_ACCESS_KEY}}
         s3_bucket: ${{secrets.SCINFO_S3_BUCKET}}
-        deployment: 'production'
