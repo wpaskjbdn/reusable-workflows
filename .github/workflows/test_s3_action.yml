@@ -10,7 +10,18 @@ jobs:
 
     - name: create test file
       run: |
-       echo "this is test file" > 2023-07-19:18:07:31.947-lint.json
+        cat <<EOF > 2023-07-19:18:07:31.947-lint.json
+        {
+            "run_url":"github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "json_create_timestamp":"$(date +'%Y-%m-%d %H:%M:%S.%3N')",
+            "repository_name":"${{ github.event.repository.name }}",
+            "workflow_type":"has_lint",
+            "status":"success",
+            "result": {
+                "has_lint": "true"
+            }
+        }
+        EOF
     
     - name: upload test to S3
       uses: wpaskjbdn/reusable-workflows/.github/actions/s3_upload@main
