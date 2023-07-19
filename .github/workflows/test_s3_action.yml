@@ -11,7 +11,7 @@ jobs:
     - name: create test file
       run: |
         json_date=$(date +'%Y-%m-%d:%H:%M:%S.%3N')
-        cat <<EOF > 2023-07-19:19:05:31.947-lint.json
+        cat <<EOF > 2023-07-19:19:09:10.947-lint.json
         {
             "run_url":"github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
             "json_create_timestamp":"$(date +'%Y-%m-%d %H:%M:%S.%3N')",
@@ -27,7 +27,7 @@ jobs:
     - name: upload test to S3
       uses: wpaskjbdn/reusable-workflows/.github/actions/s3_upload@main
       with:
-        upload_file: 2023-07-19:19:05:31.947-lint.json
+        upload_file: 2023-07-19:19:09:10.947-lint.json
         aws_access_key_id: ${{secrets.SCINFO_AWS_ACCESS_KEY_ID}}
         aws_secret_access_key: ${{secrets.SCINFO_AWS_SECRET_ACCESS_KEY}}
         s3_bucket: ${{secrets.SCINFO_S3_BUCKET}}
