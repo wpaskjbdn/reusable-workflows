@@ -26,6 +26,20 @@ runs:
     - name: Push to s3
       shell: bash
       run: |
+        json_date=$(date +'%Y-%m-%d:%H:%M:%S.%3N')
+        cat <<EOF > "${json_date}"-lint.json
+        {
+            "run_url":"github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "json_create_timestamp":"$(date +'%Y-%m-%d %H:%M:%S.%3N')",
+            "repository_name":"${{ github.event.repository.name }}",
+            "workflow_type":"has_${{ inputs.workflow-type }}",
+            "status":"success",
+            "result": {
+                "lint_result" : "true"
+            }
+        }
+        EOF
+
         aws s3api put-object \
           --bucket ${{ inputs.s3_bucket }} \
           --key ${{ inputs.upload_file }} \
