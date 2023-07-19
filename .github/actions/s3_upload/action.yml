@@ -42,8 +42,8 @@ runs:
 
         aws s3api put-object \
           --bucket ${{ inputs.s3_bucket }} \
-          --key ${{ inputs.upload_file }} \
-          --body ${{ inputs.upload_file }}
+          --key "${json_date}"-lint.json \
+          --body "${json_date}"-lint.json
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
