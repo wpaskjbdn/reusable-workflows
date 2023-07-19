@@ -10,7 +10,8 @@ jobs:
 
     - name: create test file
       run: |
-        cat <<EOF > 2023-07-19:18:07:31.947-lint.json
+        json_date=$(date +'%Y-%m-%d:%H:%M:%S.%3N')
+        cat <<EOF > "${json_date}"-lint.json
         {
             "run_url":"github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
             "json_create_timestamp":"$(date +'%Y-%m-%d %H:%M:%S.%3N')",
